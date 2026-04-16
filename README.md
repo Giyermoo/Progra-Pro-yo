@@ -1,73 +1,87 @@
-# React + TypeScript + Vite
+# FitMatch — Plataforma de Matching Deportivo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicación web para conectar personas que buscan compañeros de deporte o gimnasio. Similar a Tinder, pero para encontrar compañeros deportivos según deporte, nivel y disponibilidad horaria.
 
-Currently, two official plugins are available:
+**Curso:** Programación Profesional — TICS420-1-2026  
+**Grupo:** S217-P16  
+**Stack:** React + TypeScript + Vite + Bun  
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## Requisitos previos
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- [Bun](https://bun.sh) instalado
+- [Node.js](https://nodejs.org) instalado
+- Cuenta de Google para el login SSO
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Instalación y ejecución local
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+```bash
+# Clonar el repositorio
+git clone https://github.com/uai-cl-tics420/S217-P16-ProyectoPrograPro
+cd S217-P16-ProyectoPrograPro
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+# Instalar dependencias
+bun install
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Ejecutar en modo desarrollo
+bun run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+La aplicación estará disponible en `http://localhost:5173`
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Estructura del proyecto
+
 ```
+src/
+├── features/
+│   ├── auth/
+│   │   ├── AuthContext.tsx       # Contexto global de autenticación
+│   │   ├── LoginForm.tsx         # Pantalla de login con Google SSO
+│   │   └── RegisterForm.tsx      # Formulario de registro de usuario
+│   ├── profile/
+│   │   └── components/
+│   │       └── ProfileForm.tsx   # Formulario de perfil deportivo
+│   ├── matches/                  # (próximo sprint)
+│   ├── chat/                     # (próximo sprint)
+│   ├── events/                   # (próximo sprint)
+│   └── admin/                    # (próximo sprint)
+├── App.tsx                       # Rutas principales
+└── main.tsx                      # Entrada de la aplicación
+```
+
+---
+
+## Sprint 1 — Avance completado
+
+### Épica 01 — Infraestructura técnica
+Se inicializó el proyecto con Bun + Vite + React + TypeScript. Se configuró la estructura de carpetas por features, se instalaron las dependencias base y se subió el proyecto inicial a GitHub con integración a GitHub Projects para el seguimiento del backlog.
+
+### Épica 02 — Autenticación y gestión de usuarios
+
+**Registro de usuario (HU-04)**  
+Se creó el componente `RegisterForm.tsx` con campos de email y contraseña, validación básica en el frontend (formato de email y largo mínimo de contraseña) y feedback visual de errores con estado temporal en React.
+
+**Login de usuario (HU-05)**  
+Se implementó autenticación real con Google SSO usando la librería `@react-oauth/google`. Al hacer login exitoso, se obtienen los datos del usuario (nombre, email, foto) desde la API de Google y se almacenan en el contexto global de la aplicación. El usuario es redirigido automáticamente a `/profile` tras autenticarse.
+
+**Persistencia de sesión (HU-06)**  
+Se creó `AuthContext.tsx` que maneja el estado global del usuario autenticado. La sesión se persiste en `localStorage`, por lo que al recargar la página el usuario permanece logueado. Se implementó un hook `useAuth` para acceder al contexto desde cualquier componente, y rutas privadas que redirigen a `/login` si el usuario no está autenticado.
+
+### Formulario de perfil deportivo (HU-03)
+Se creó `ProfileForm.tsx` con campos para nombre, deporte principal, nivel (principiante/intermedio/avanzado), disponibilidad horaria por día y franja (AM/PM) y descripción personal. El formulario incluye selección múltiple de horarios con feedback visual.
+
+---
+
+## Próximos sprints
+
+- Sistema de matching entre usuarios (tipo swipe)
+- Chat entre usuarios con match
+- Creación y unión a eventos deportivos
+- Panel de administración
+- Multilenguaje (español/inglés)
+- Deploy en la nube
